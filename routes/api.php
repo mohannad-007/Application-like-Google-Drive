@@ -66,5 +66,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::post('/checkIn',[FileController::class,'checkIn'])->middleware(['CheckMember','FileReserved']);
     Route::post('/checkOut',[FileController::class,'checkOut']);
     Route::post('/bulkCheckIn',[FileController::class,'bulkCheckIn'])->middleware(['CheckMember','FileReserved']);
+    Route::get('/showReport',[FileController::class,'showReport']);
+    Route::get('/showReportForFile',[FileController::class,'showReportForFile']);
 
 });

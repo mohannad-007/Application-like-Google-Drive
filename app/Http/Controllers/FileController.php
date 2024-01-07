@@ -190,6 +190,7 @@ class FileController extends Controller
         if($checkin)
         {
             $fileEvent=$this->fileRepository->addFileEvent($data['file_id'],$user_id,4);
+//            dd($fileEvent);
             if ($fileEvent)
             {
                 $file_id=$data['file_id'];
@@ -274,7 +275,10 @@ class FileController extends Controller
             return response()->json(['status'=>false,'message'=>'Files Not Checked In'],500);
         }
     }
-    public function showReportForFile(Request $request):JsonResponse
+    public function showReport():JsonResponse{
+        return $this->fileRepository->showReport();
+    }
+    public function showReportForFile(Request $request)
     {
         $data=$request->all();
         $rules=
@@ -283,9 +287,9 @@ class FileController extends Controller
             ];
         $validator=Validator::make($data,$rules);
         if ($validator->fails())
-            {
-                return response()->json(['status'=>false,'message'=>$validator->errors()],500);
-            }
+        {
+            return response()->json(['status'=>false,'message'=>$validator->errors()],500);
+        }
         $reports=$this->fileRepository->showReportForFile($data);
         if ($reports)
         {

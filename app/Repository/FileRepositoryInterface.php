@@ -12,7 +12,7 @@ interface FileRepositoryInterface
 
     public function checkFileIfExist($group_id, $file_name, $file_extension): bool;
 
-    public function addFileEvent($file_id, $user_id, $event_type_id): ?FileEvent;
+    public function addFileEvent($file_id, $user_id, $event_type_id);
 
     public function downloadFile($data): ?string;
 
@@ -23,5 +23,6 @@ interface FileRepositoryInterface
     public function checkIn($data): bool;
     public function checkOut($data): bool;
     public function bulkCheckIn($data): bool;
+    public function showReport();
     public function showReportForFile($data);
 }

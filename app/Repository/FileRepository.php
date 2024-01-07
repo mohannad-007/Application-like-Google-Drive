@@ -111,16 +111,16 @@ class FileRepository implements  FileRepositoryInterface
     {
         return $this->fileModel->where('group_id',$group_id)->where('name',$file_name)->where('extension',$file_extension)->where('is_active',1)->exists();
     }
-    public function addFileEvent($file_id,$user_id,$event_type_id):?FileEvent
+    public function addFileEvent($file_id,$user_id,$event_type_id)
     {
-
-        $this->fileEventModel->file_id=$file_id;
-        $this->fileEventModel->event_type_id=$event_type_id;
-        $this->fileEventModel->user_id=$user_id;
-        $this->fileEventModel->date=Carbon::now();
-        $this->fileEventModel->save();
-        if ($this->fileEventModel)
-            return $this->fileEventModel;
+        $fileEventModel= new FileEvent();
+        $fileEventModel->file_id=$file_id;
+        $fileEventModel->event_type_id=$event_type_id;
+        $fileEventModel->user_id=$user_id;
+        $fileEventModel->date=Carbon::now();
+        $fileEventModel->save();
+        if ($fileEventModel)
+            return $fileEventModel;
         else
             return null;
 
@@ -208,21 +208,16 @@ class FileRepository implements  FileRepositoryInterface
         }
         return $isReserved;
     }
+    public function showReport()
+    {
+        $fileEvents = FileEvent::with('file','user','eventType')->get();
+        return response()->json(['file_events' => $fileEvents], 200);
+    }
+
     public function showReportForFile($data)
     {
-        $results = $this->fileEventModel->where('file_id', $data['file_id'])
-            ->orderBy('created_at', 'desc')
-            ->get()
-            ->when(function (FileEvent $fileEvent) {
-                return $fileEvent->eventType;
-            }, function (FileEvent $fileEvent) {
-                return [
-                    'event_type' => $fileEvent->eventType->name,
-                    'event_details' => $fileEvent->eventType->details,
-                    'user_name' => $fileEvent->user->name,
-                ];
-            })
-            ->toArray();
+        $fileEvents = FileEvent::where('file_id',$data['file_id'])->with('file','user','eventType')->get();
+        return $fileEvents;
     }
 
 }
