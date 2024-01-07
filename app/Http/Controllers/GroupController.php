@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Aspects\Logger;
+use App\Models\RequestUserToGroups;
 use App\Repository\GroupRepositoryInterface;
 use App\Repository\UserRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Validator;
 use Obiefy\API\Facades\API;
 
@@ -98,5 +100,77 @@ class GroupController extends Controller
     {
         return $this->groupRepository->deleteUserFromGroup($request);
     }
+    public function displayAllUser()
+    {
+        return $this->groupRepository->displayAllUser();
+    }
+    public function displayAllGroups()
+    {
+        return $this->groupRepository->displayAllGroups();
+    }
+    public function searchUser(Request $request):JsonResponse
+    {
+        return $this->groupRepository->searchUser($request);
+    }
+    public function searchGroup(Request $request):JsonResponse
+    {
+        return $this->groupRepository->searchGroup($request);
+    }
+
+    public function displayUserRequestForGroup(Request $request)
+    {
+        return $this->groupRepository->displayUserRequestForGroup($request);
+    }
+    public function unAcceptedRequest(Request $request):JsonResponse{
+        return $this->groupRepository->unAcceptedRequest($request);
+    }
+    public  function AcceptedRequest(Request $request):JsonResponse{
+        return $this->groupRepository->AcceptedRequest($request);
+    }
+    public function RequestToJoinGroup(Request $request):JsonResponse{
+        return $this->groupRepository->RequestToJoinGroup($request);
+    }
+
+
+
+
+    public function toggleDatabase()
+    {
+        // Get the current database name from the .env file
+        $currentDatabase = env('DB_DATABASE');
+
+        // Toggle between 'sourcefile' and 'sourcefile2'
+        $newDatabase = ($currentDatabase === 'sourcefile') ? 'sourcefile2' : 'sourcefile';
+
+        // Update the .env file with the new DB_DATABASE value
+        $this->updateEnvFile(['DB_DATABASE' => $newDatabase]);
+
+        // Clear the database configuration cache
+        Artisan::call('config:clear');
+
+        return response()->json([
+           'messages' => 'Database Changed to ' . $newDatabase,
+        ]);
+//        return redirect()->back()->with('success', 'Database toggled successfully.');
+    }
+
+    private function updateEnvFile($data)
+    {
+        $envFilePath = base_path('.env');
+
+        // Read the existing .env file
+        $currentEnv = file_get_contents($envFilePath);
+
+        // Replace the existing values with new ones
+        foreach ($data as $key => $value) {
+            $currentEnv = preg_replace('/^' . $key . '.+/m', $key . '=' . $value, $currentEnv);
+        }
+
+        // Save the changes back to the .env file
+        file_put_contents($envFilePath, $currentEnv);
+    }
+
+
+
 }
 

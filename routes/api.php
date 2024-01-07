@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Controller;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\GroupController;
 use Illuminate\Http\Request;
@@ -24,6 +25,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/register',[UserController::class,'register']);
 Route::post('/login',[UserController::class,'login']);
 Route::post('/logout',[UserController::class,'logout']);
+Route::post('/toggleDatabase',[GroupController::class,'toggleDatabase']);
+
 
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
      Route::get('/allUserGroups', [UserController::class, 'allUserGroups']);
@@ -32,14 +35,22 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
  });
 //////////////////////////////GROUPS//////////////////////////////
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
-Route::post('/creatGroup',[GroupController::class,'creatGroup'])->middleware('CheckGroupName');
-Route::delete('/deleteGroup',[GroupController::class,'deleteGroup'])->middleware('FileReserved');
-Route::get('/allGroupFiles',[GroupController::class,'allGroupFiles']);
-Route::get('/groupUsers',[GroupController::class,'groupUsers']);
-Route::get('/allUserGroup',[GroupController::class,'allUserGroup']);
-Route::post('/addUserToGroup',[GroupController::class,'addUserToGroup'])->middleware('CheckGroupOwner');
+    Route::post('/creatGroup',[GroupController::class,'creatGroup'])->middleware('CheckGroupName');
+    Route::delete('/deleteGroup',[GroupController::class,'deleteGroup'])->middleware('FileReserved');
+    Route::get('/allGroupFiles',[GroupController::class,'allGroupFiles']);
+    Route::get('/groupUsers',[GroupController::class,'groupUsers']);
+    Route::get('/allUserGroup',[GroupController::class,'allUserGroup']);
+    Route::post('/addUserToGroup',[GroupController::class,'addUserToGroup'])->middleware('CheckGroupOwner');
 //Route::delete('/deleteUserFromGroup',[GroupController::class,'deleteUserFromGroup'])->middleware(['CheckGroupOwner','CheckMember','FileReserved']);
-Route::delete('/deleteUserFromGroup',[GroupController::class,'deleteUserFromGroup']);
+    Route::delete('/deleteUserFromGroup',[GroupController::class,'deleteUserFromGroup']);
+    Route::get('/displayAllUser',[GroupController::class,'displayAllUser']);
+    Route::get('/displayAllGroups',[GroupController::class,'displayAllGroups']);
+    Route::get('/searchUser',[GroupController::class,'searchUser']);
+    Route::get('/searchGroup',[GroupController::class,'searchGroup']);
+    Route::get('/displayUserRequestForGroup',[GroupController::class,'displayUserRequestForGroup']);
+    Route::post('/unAcceptedRequest',[GroupController::class,'unAcceptedRequest']);
+    Route::post('/AcceptedRequest',[GroupController::class,'AcceptedRequest']);
+    Route::post('/RequestToJoinGroup',[GroupController::class,'RequestToJoinGroup']);
 
 });
 

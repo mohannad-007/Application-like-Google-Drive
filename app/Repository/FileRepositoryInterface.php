@@ -14,7 +14,7 @@ interface FileRepositoryInterface
 
     public function addFileEvent($file_id, $user_id, $event_type_id): ?FileEvent;
 
-    public function downloadFile($data): ?array;
+    public function downloadFile($data): ?string;
 
     public function deleteFile($data): bool;
 

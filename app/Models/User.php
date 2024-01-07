@@ -62,4 +62,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(FileUserReserved::class);
     }
+    public function requestUserToGroups()
+    {
+        return $this->hasMany(RequestUserToGroups::class);
+    }
 }

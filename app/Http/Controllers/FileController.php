@@ -104,7 +104,12 @@ class FileController extends Controller
         $fileEvent=$this->fileRepository->addFileEvent($data['file_id'],$user_id,2);
             if ($fileEvent)
             {
-                return response($responseData['content'], 200, $responseData['headers']);
+                if ($responseData) {
+                    return response()->json(['status' => true, 'file_url' => $responseData], 200);
+                } else {
+                    return response()->json(['status' => false, 'message' => 'File not found'], 404);
+                }
+//                return response($responseData['content'], 200, $responseData['headers']);
             }
             else
             {
@@ -133,6 +138,8 @@ class FileController extends Controller
             //dd($fileEvent);
             if ($fileEvent)
             {
+                $file_id=$data['file_id'];
+                File::find($file_id)->delete();
                 return response()->json(['status'=>true,'message'=>'File Deleted Successfully'],200);
             }
         }

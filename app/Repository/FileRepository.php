@@ -126,28 +126,42 @@ class FileRepository implements  FileRepositoryInterface
 
 
     }
-    public function downloadFile($data):?array
+    public function downloadFile($data): ?string
     {
-        $fileUrl = $this->fileModel->where('id', $data['file_id'])->first()->path;
-        // dd($fileUrl);
-        $fileName = basename($fileUrl);
-        //dd($fileName);
-        $fileContent = Storage::disk('local')->get($fileUrl);
-        // dd($fileContent);
-        $mimeType = Storage::disk('local')->mimeType($fileUrl);
-        $headers = [
-            'Content-Type' => $mimeType,
-            'Content-Disposition' => "attachment; filename={$fileName}",
-        ];
+//        $fileUrl = $this->fileModel->where('id', $data['file_id'])->first()->path;
+//        // dd($fileUrl);
+//        $fileName = basename($fileUrl);
+//        //dd($fileName);
+////        $path=$fileUrl->path;
+//        $fileContent = Storage::disk('local')->url($fileUrl);
+////         dd($fileContent);
+//        $mimeType = Storage::disk('local')->mimeType($fileUrl);
+//        $headers = [
+//            'Content-Type' => $mimeType,
+//            'Content-Disposition' => "attachment; filename={$fileName}",
+//        ];
+//
+//        $responseData = [
+//            'content' => $fileContent,
+//            'headers' => $headers,
+//        ];
+//        //dd($responseData);
+//
+//
+//        return([
+//            $responseData,
+//            $fileUrl
+//        ])  ;
+        $file = $this->fileModel->where('id', $data['file_id'])->first();
 
-        $responseData = [
-            'content' => $fileContent,
-            'headers' => $headers,
-        ];
-        //dd($responseData);
+        if (!$file) {
+            return null; // أو يمكنك التعامل مع حالة عدم وجود الملف هنا
+        }
 
+        $fileUrl = $file->path;
+        $fileUrl = Storage::disk('local')->url($fileUrl); // الحصول على الرابط العام للملف
 
-        return $responseData;
+        return $fileUrl;
     }
     public function deleteFile($data):bool
     {
@@ -163,6 +177,9 @@ class FileRepository implements  FileRepositoryInterface
        // dd($pathToTrash);
         $isDone=Storage::move($path, $pathToTrash);
        // dd($isDone);
+
+//        $f=$this->fileModel->find($data['file_id']);
+//        $file=$data['file_id']->find();
         return $result;
 
     }

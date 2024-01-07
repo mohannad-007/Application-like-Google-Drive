@@ -34,4 +34,8 @@ class Group extends Model
     {
         return $this->hasMany(FileUserReserved::class);
     }
+    public function requestUserToGroups()
+    {
+        return $this->hasMany(RequestUserToGroups::class);
+    }
 }
