@@ -27,7 +27,7 @@ class FileController extends Controller
         $data=$request->all();
        // dd($data);
         $rules=[
-            'file'=>'required',
+            'file'=>'required|max:5024',
             'group_id'=>'required|integer'
         ];
 
