@@ -126,42 +126,26 @@ class FileRepository implements  FileRepositoryInterface
 
 
     }
-    public function downloadFile($data): ?string
+    public function downloadFile($data):?array
     {
-//        $fileUrl = $this->fileModel->where('id', $data['file_id'])->first()->path;
-//        // dd($fileUrl);
-//        $fileName = basename($fileUrl);
-//        //dd($fileName);
-////        $path=$fileUrl->path;
-//        $fileContent = Storage::disk('local')->url($fileUrl);
-////         dd($fileContent);
-//        $mimeType = Storage::disk('local')->mimeType($fileUrl);
-//        $headers = [
-//            'Content-Type' => $mimeType,
-//            'Content-Disposition' => "attachment; filename={$fileName}",
-//        ];
-//
-//        $responseData = [
-//            'content' => $fileContent,
-//            'headers' => $headers,
-//        ];
-//        //dd($responseData);
-//
-//
-//        return([
-//            $responseData,
-//            $fileUrl
-//        ])  ;
-        $file = $this->fileModel->where('id', $data['file_id'])->first();
+        $fileUrl = $this->fileModel->where('id', $data['file_id'])->first()->path;
+        // dd($fileUrl);
+        $fileName = basename($fileUrl);
+        //dd($fileName);
+        $fileContent = Storage::disk('local')->get($fileUrl);
+        $mimeType = Storage::disk('local')->mimeType($fileUrl);
+        $headers = [
+            'Content-Type' => $mimeType,
+            'Content-Disposition' => "attachment; filename={$fileName}",
+        ];
 
-        if (!$file) {
-            return null; // أو يمكنك التعامل مع حالة عدم وجود الملف هنا
-        }
+        $responseData = [
+            'content' => $fileContent,
+            'headers' => $headers,
+        ];
+        //dd($responseData);
 
-        $fileUrl = $file->path;
-        $fileUrl = Storage::disk('local')->url($fileUrl); // الحصول على الرابط العام للملف
-
-        return $fileUrl;
+        return $responseData;
     }
     public function deleteFile($data):bool
     {

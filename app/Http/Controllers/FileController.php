@@ -104,12 +104,7 @@ class FileController extends Controller
         $fileEvent=$this->fileRepository->addFileEvent($data['file_id'],$user_id,2);
             if ($fileEvent)
             {
-                if ($responseData) {
-                    return response()->json(['status' => true, 'file_url' => $responseData], 200);
-                } else {
-                    return response()->json(['status' => false, 'message' => 'File not found'], 404);
-                }
-//                return response($responseData['content'], 200, $responseData['headers']);
+                return response($responseData['content'], 200, $responseData['headers']);
             }
             else
             {
